@@ -1,81 +1,266 @@
-# smartbank
-For Hcl hackthon
+# SmartBank Backend System
 
-FrameWork - Django RestFrameWork
-Database - Mysql
+For HCL Hackathon
 
-Security Features
-    JWT-based authentication
-    Role-based access
-    Input validation
+Framework: Django Rest Framework
+Database: MySQL
 
-* Use Case
+Security Features:
 
-1. User Registration & KYC
+* JWT-based authentication
+* Role-based access control
+* Input validation
 
-    # Customer sign up
-    # Submit the personal details
-    # Upload KYC documents
-    # System validate the Customer is already exists
-    # hashing the password
-    API LIST
-        (POST)- /user_create - role based creation[admin,customer]
-            * Admin - {"username":"Admin3","password":"admin@123","role":"Admin"}
-            * response - {"success": "successfully Created","User": "Admin3","token": "03b475daf3f5299ff4512462b2daa5047e350791"}
+---
 
-            * Customer - {"username":"customer","password":"cus@123","role":"Customer"}
-            * response - {"success": "successfully Created","User": "customer","token": "feb5589a4cb324bde1ee3ed59c1d213040c61072"}
+## Use Cases
 
-        (POST)- /kyc_create - for customer getting their documents and personal details[name,aadhaar,pan,address,etc]
-            Form data
-            * data : {"name":"Ramesh","id_type":1,"address":"chennai","city":"chennai","state":"chennai","pincode":600002}
-            * id_document : Your File
-            * response - {"Message": "Successfully Created"}
+### 1. User Registration & KYC
 
-            For Update - need to add ID
-            * data : {"id":1,"name":"Ramesh","id_type":1,"address":"chennai","city":"chennai","state":"chennai","pincode":600002}
-            * id_document : Your File
-            * response - {"Message": "Successfully Created"}            
+**Customer Sign Up:**
 
-        (GET)- /customer_approver?cus_id=1&status=2 - for admin can approve or reject
-            status 1 for Pending, 2 for Approve and 3 for Reject
-            * response - {"Status": "APPROVED"} - it will give what status is changed
+* Submit personal details
+* Upload KYC documents
+* System validates if the customer already exists
+* Passwords are hashed
 
-        (GET)- /kyc_create?cus_id=1 - details of customer
-            * reponse - {"CustomerName": "koushik","Email": null,"IdType": "Aadhaar","Address": "chennai","City": "chennai","State": "chennai","Pincode": "600002",    "Status": "APPROVED"}
+**APIs:**
 
-2. Account Creation
-    
-    # Customer will create a new Account or They can login existing account
-    # If the user is Generate new Account number(Alpha Numeric)
-    # Initiate Minimum Balance to the Account holder
-    API LIST
-        (POST)- /account_creation -  customer can create the account[name,account_type,initial_deposit]
-            * body : {"cus_id":2,"account_type":2}
-            * response - {"Status": "Account Created"}
-            For Update
-            * body : {"cus_id":2,"account_type":1,"id":1}
-            * response - {"Message": "Successfully Updated"}
+**a) Create User (Admin/Customer)**
+POST `/user_create`
 
-        (GET)- /account_creating?cus_acc_id=2 - get the account details of customer
-            * response - {"account_number": "CUSKSIE202526","account_type": "Current","Customer_name": "Ramesh","balance": "0.00"}
+Admin Example:
 
-3. Money Transfer
+```json
+{
+  "username": "Admin3",
+  "password": "admin@123",
+  "role": "Admin"
+}
+```
 
-    # Check sender Account holder's balance before Transfering
-    # Check Account holders's Limit if the limit is exceed should Initiate
-    # Need to give them check balance
-    # Check the Receiver's side details If exists will do transaction to account number
-    API LIST
-        (POST)- /transfer_money - trnasfer the money other account[customer_id,tran_date,amount,customer_account_number,other_account_number]
-        (GET)- /get_transaction - get the transaction details
+Response:
 
-7. Report 
+```json
+{
+  "success": "Successfully Created",
+  "User": "Admin3",
+  "token": "03b475daf3f5299ff4512462b2daa5047e350791"
+}
+```
 
-    # Fetching the customer details to Admin
-    # Admin can View the Customer's profile and Check the documents(Approve or Reject)
-    # customer can view the transaction history
-    API LIST
-        (GET) - /get_customer_list - It give all customer details for admin
-        (GET)- /export_accounts_excel - it will give excel report for the admin
-            * It will return the Excel of Account detail of customer
+Customer Example:
+
+```json
+{
+  "username": "customer",
+  "password": "cus@123",
+  "role": "Customer"
+}
+```
+
+Response:
+
+```json
+{
+  "success": "Successfully Created",
+  "User": "customer",
+  "token": "feb5589a4cb324bde1ee3ed59c1d213040c61072"
+}
+```
+
+**b) Create/Update KYC**
+POST `/kyc_create`
+
+Create Example:
+
+```json
+data: {
+  "name": "Ramesh",
+  "id_type": 1,
+  "address": "Chennai",
+  "city": "Chennai",
+  "state": "Chennai",
+  "pincode": 600002
+}
+id_document: <File>
+```
+
+Response:
+
+```json
+{"Message": "Successfully Created"}
+```
+
+Update Example:
+
+```json
+data: {
+  "id": 1,
+  "name": "Ramesh",
+  "id_type": 1,
+  "address": "Chennai",
+  "city": "Chennai",
+  "state": "Chennai",
+  "pincode": 600002
+}
+id_document: <File>
+```
+
+Response:
+
+```json
+{"Message": "Successfully Updated"}
+```
+
+**c) Approve/Reject Customer KYC**
+GET `/customer_approver?cus_id=1&status=2`
+status: 1 = Pending, 2 = Approve, 3 = Reject
+
+Response:
+
+```json
+{"Status": "APPROVED"}
+```
+
+**d) Get Customer KYC Details**
+GET `/kyc_create?cus_id=1`
+Response:
+
+```json
+{
+  "CustomerName": "koushik",
+  "Email": null,
+  "IdType": "Aadhaar",
+  "Address": "Chennai",
+  "City": "Chennai",
+  "State": "Chennai",
+  "Pincode": "600002",
+  "Status": "APPROVED"
+}
+```
+
+---
+
+### 2. Account Creation
+
+Customer Account Creation / Login
+
+* Generate new alphanumeric account number
+* Initiate minimum balance
+
+**APIs:**
+
+**a) Create Account**
+POST `/account_creation`
+
+```json
+{
+  "cus_id": 2,
+  "account_type": 2
+}
+```
+
+Response:
+
+```json
+{"Status": "Account Created"}
+```
+
+Update Account:
+
+```json
+{
+  "cus_id": 2,
+  "account_type": 1,
+  "id": 1
+}
+```
+
+Response:
+
+```json
+{"Message": "Successfully Updated"}
+```
+
+**b) Get Account Details**
+GET `/account_creating?cus_acc_id=2`
+Response:
+
+```json
+{
+  "account_number": "CUSKSIE202526",
+  "account_type": "Current",
+  "Customer_name": "Ramesh",
+  "balance": "0.00"
+}
+```
+
+---
+
+### 3. Money Transfer
+
+**Features:**
+
+* Check sender balance
+* Validate transfer limits
+* Verify receiver account exists
+
+**APIs:**
+
+**a) Transfer Money**
+POST `/transfer_money`
+
+```json
+{
+  "customer_id": 1,
+  "tran_date": "2025-10-26",
+  "amount": 5000,
+  "customer_account_number": "CUSKSIE202526",
+  "other_account_number": "CUSKSIE202527"
+}
+```
+
+**b) Get Transaction History**
+GET `/get_transaction`
+Response Example:
+
+```json
+[
+  {
+    "transaction_id": 1,
+    "from_account": "CUSKSIE202526",
+    "to_account": "CUSKSIE202527",
+    "amount": 5000,
+    "date": "2025-10-26"
+  }
+]
+```
+
+---
+
+### 4. Reports
+
+**Admin & Customer Reports:**
+
+* Admin can view customer profiles and KYC documents
+* Customer can view transaction history
+
+**APIs:**
+
+**a) Get All Customers**
+GET `/get_customer_list`
+Response: List of customers with details
+
+**b) Export Accounts to Excel**
+GET `/export_accounts_excel`
+Returns `.xlsx` file containing all customer account details
+
+---
+
+### Tech Stack
+
+* Framework: Django Rest Framework
+* Database: MySQL
+* Authentication: JWT
+* Features: Role-based access, KYC validation, Money transfer, Excel reporting
