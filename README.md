@@ -69,7 +69,7 @@ Response:
 }
 ```
 
-**b) Create/Update KYC**
+**b) Create/Update KYC in Form Data**
 POST `/kyc_create`
 
 Create Example:
