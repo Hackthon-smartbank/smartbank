@@ -15,7 +15,7 @@ Security Features:
 
 ## Use Cases
 
-### 1. User Registration & KYC
+### 1. User Registration & KYC - COMPLETED
 
 **Customer Sign Up:**
 
@@ -142,7 +142,7 @@ Response:
 
 ---
 
-### 2. Account Creation
+### 2. Account Creation - COMPLETED
 
 Customer Account Creation / Login
 
@@ -229,7 +229,7 @@ GET `/get_transaction`
 GET `/get_customer_list`
 Response: List of customers with details
 
-**b) Export Accounts to Excel**
+**b) Export Accounts to Excel** -COMPLETED
 GET `/export_accounts_excel`
 Returns `.xlsx` file containing all customer account details
 
