@@ -211,33 +211,10 @@ Response:
 **a) Transfer Money**
 POST `/transfer_money`
 
-```json
-{
-  "customer_id": 1,
-  "tran_date": "2025-10-26",
-  "amount": 5000,
-  "customer_account_number": "CUSKSIE202526",
-  "other_account_number": "CUSKSIE202527"
-}
-```
 
 **b) Get Transaction History**
 GET `/get_transaction`
-Response Example:
 
-```json
-[
-  {
-    "transaction_id": 1,
-    "from_account": "CUSKSIE202526",
-    "to_account": "CUSKSIE202527",
-    "amount": 5000,
-    "date": "2025-10-26"
-  }
-]
-```
-
----
 
 ### 4. Reports
 
